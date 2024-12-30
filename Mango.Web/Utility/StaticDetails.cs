@@ -2,6 +2,8 @@
 {
     public class StaticDetails
     {
+        public static string CouponAPIBase { get; set; } = string.Empty;
+
         public enum HttpRequestType
         {
             GET,
