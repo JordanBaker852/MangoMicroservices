@@ -64,7 +64,7 @@ namespace Mango.Web.Service
             {
                 HttpRequest = StaticDetails.HttpRequestType.PUT,
                 Data = couponDto,
-                Url = $"{StaticDetails.CouponAPIBase}/api/coupon"
+                Url = $"{StaticDetails.CouponAPIBase}/api"
             });
         }
 
