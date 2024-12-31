@@ -2,8 +2,6 @@
 using Mango.Web.Service.IService;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Reflection;
 
 namespace Mango.Web.Controllers
 {
@@ -26,6 +24,10 @@ namespace Mango.Web.Controllers
             {
                 list = JsonConvert.DeserializeObject<List<CouponDTO>>(response.Result.ToString());
             }
+            else
+            {
+                TempData["error"] = response?.Message;
+            }
 
             return View(list);
         }
@@ -44,7 +46,12 @@ namespace Mango.Web.Controllers
 
                 if (response != null && response.IsSuccess)
                 {
+                    TempData["success"] = "Coupon created successfully";
                     return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    TempData["error"] = response?.Message;
                 }
             }
 
@@ -54,25 +61,34 @@ namespace Mango.Web.Controllers
 
         public async Task<IActionResult> Delete(int couponId)
         {
-            ResponseDTO? response = await _couponService.GetAllCouponByIdAsync(couponId);
+            ResponseDTO? response = await _couponService.GetCouponByIdAsync(couponId);
 
             if (response != null && response.IsSuccess)
             {
                 CouponDTO? model = JsonConvert.DeserializeObject<CouponDTO>(response.Result.ToString());
                 return View(model);
             }
+            else
+            {
+                TempData["error"] = response?.Message;
+            }
 
             return NotFound();
         }
 
-        [HttpDelete]
+        [HttpPost]
         public async Task<IActionResult> DeleteCoupon(int couponId)
         {
             ResponseDTO? response = await _couponService.DeleteCouponAsync(couponId);
 
             if (response != null && response.IsSuccess)
             {
+                TempData["success"] = $"Coupon deleted successfully";
                 return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                TempData["error"] = response?.Message;
             }
 
             return NotFound();
