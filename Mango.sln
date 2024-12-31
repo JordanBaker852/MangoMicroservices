@@ -8,6 +8,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gateway", "Gateway", "{6B9F5EC8-8B5F-451E-BD4B-23436DC9429C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integration", "Integration", "{FC4BAD44-8DF8-4538-986F-15F7CC21E5AF}"
+	ProjectSection(SolutionItems) = preProject
+		Mango.Web\Views\_ViewImports.cshtml = Mango.Web\Views\_ViewImports.cshtml
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{451B75BA-3F2A-4B2A-8CAC-330C37B71533}"
 EndProject
