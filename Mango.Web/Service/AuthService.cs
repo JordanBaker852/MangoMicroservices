@@ -30,7 +30,7 @@ namespace Mango.Web.Service
                 HttpRequest = StaticDetails.HttpRequestType.POST,
                 Data = loginRequestDTO,
                 Url = $"{StaticDetails.AuthAPIBase}/api/auth/login"
-            });
+            }, withBearer: false);
         }
 
         public async Task<ResponseDTO?> RegitserAsync(RegistrationRequestDTO registrationRequestDTO)
@@ -40,7 +40,7 @@ namespace Mango.Web.Service
                 HttpRequest = StaticDetails.HttpRequestType.POST,
                 Data = registrationRequestDTO,
                 Url = $"{StaticDetails.AuthAPIBase}/api/auth/register"
-            });
+            }, withBearer: false);
         }
 
         public async Task<ResponseDTO?> EmailAlreadyTakenAsync(string email)
@@ -50,7 +50,7 @@ namespace Mango.Web.Service
                 HttpRequest = StaticDetails.HttpRequestType.POST,
                 Data = email,
                 Url = $"{StaticDetails.AuthAPIBase}/api/auth/EmailTaken"
-            });
+            }, withBearer: false);
         }
 
         public void Dispose()

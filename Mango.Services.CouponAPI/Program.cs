@@ -1,12 +1,10 @@
 using AutoMapper;
 using Mango.Services.CouponAPI;
 using Mango.Services.CouponAPI.Data;
-using Mango.Services.CouponAPI.Models;
+using Mango.Services.CouponAPI.Extentions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,29 +46,7 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 
-var jwtOptions = builder.Configuration.GetSection("ApiSettings:JWTOptions").Get<JWTOptions>();
-
-if (jwtOptions != null)
-{
-    var key = Encoding.ASCII.GetBytes(jwtOptions.Secret);
-
-    builder.Services.AddAuthentication(authOption =>
-    {
-        authOption.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        authOption.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    }).AddJwtBearer(jwtBearerOption =>
-    {
-        jwtBearerOption.TokenValidationParameters = new TokenValidationParameters()
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(key),
-            ValidateIssuer = true,
-            ValidIssuer = jwtOptions.Issuer,
-            ValidateAudience = true,
-            ValidAudience = jwtOptions.Audience
-        };
-    });
-}
+builder.AddAppAuthentication();
 
 builder.Services.AddAuthorization();
 

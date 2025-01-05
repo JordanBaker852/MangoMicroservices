@@ -19,9 +19,9 @@ namespace Mango.Web.Service
 
         public string? GetToken()
         {
-            var token = _httpContextAccessor.HttpContext?.Request.Cookies.FirstOrDefault(cookie => cookie.Key == StaticDetails.TOKEN_COOKIE_NAME);
+            var token = _httpContextAccessor.HttpContext?.Request.Cookies.FirstOrDefault(cookie => cookie.Key == StaticDetails.TOKEN_COOKIE_NAME).Value;
 
-            return token == null ? string.Empty : token.Value.ToString();
+            return token == null ? string.Empty : token;
         }
 
         public void SetToken(string token)
