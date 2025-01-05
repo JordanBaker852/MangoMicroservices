@@ -3,9 +3,8 @@ using Mango.Services.AuthAPI.Models;
 using Mango.Services.AuthAPI.Models.DTO;
 using Mango.Services.AuthAPI.Service.IService;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Asn1.Mozilla;
-using System.Reflection.Metadata.Ecma335;
+using Microsoft.VisualBasic;
+using System.Runtime.InteropServices;
 
 namespace Mango.Services.AuthAPI.Service
 {
@@ -43,7 +42,7 @@ namespace Mango.Services.AuthAPI.Service
 
                 if (result.Succeeded)
                 {
-                    var returnUser = _db.ApplicationUsers.First(x => x.Email.ToLower() == registrationRequestDTO.Email.ToLower());
+                    var returnUser = _db.ApplicationUsers.First(user => user.Email.ToLower() == registrationRequestDTO.Email.ToLower());
 
                     UserDTO userDTO = new()
                     {
@@ -68,7 +67,7 @@ namespace Mango.Services.AuthAPI.Service
 
         public async Task<LoginResponseDTO> Login(LoginRequestDTO loginRequestDTO)
         {
-            var user = _db.ApplicationUsers.FirstOrDefault(x => x.Email.ToLower() == loginRequestDTO.Email.ToLower());
+            var user = _db.ApplicationUsers.FirstOrDefault(user => user.Email.ToLower() == loginRequestDTO.Email.ToLower());
 
             bool isValid = await _userManager.CheckPasswordAsync(user, loginRequestDTO.Password);
 
@@ -82,7 +81,8 @@ namespace Mango.Services.AuthAPI.Service
             }
 
             //Generate JWT token
-            var token = _jwtTokenGenerator.GenerateToken(user);
+            var userRoles = await _userManager.GetRolesAsync(user);
+            var token = _jwtTokenGenerator.GenerateToken(user, userRoles);
 
             UserDTO userDTO = new()
             {
@@ -103,7 +103,7 @@ namespace Mango.Services.AuthAPI.Service
 
         public async Task<bool> AssignRole(string email, string roleName)
         {
-            var user = _db.ApplicationUsers.FirstOrDefault(x => x.Email.ToLower() == email.ToLower());
+            var user = _db.ApplicationUsers.FirstOrDefault(user => user.Email.ToLower() == email.ToLower());
 
             if (user == null) {
                 return false;
@@ -121,7 +121,7 @@ namespace Mango.Services.AuthAPI.Service
 
         public bool EmailTaken(string email)
         {
-            var user = _db.ApplicationUsers.FirstOrDefault(x => x.Email.ToLower() == email.ToLower());
+            var user = _db.ApplicationUsers.FirstOrDefault(user => user.Email.ToLower() == email.ToLower());
 
             return user != null;
         }
