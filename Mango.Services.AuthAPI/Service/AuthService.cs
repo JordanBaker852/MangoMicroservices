@@ -3,6 +3,9 @@ using Mango.Services.AuthAPI.Models;
 using Mango.Services.AuthAPI.Models.DTO;
 using Mango.Services.AuthAPI.Service.IService;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Asn1.Mozilla;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Mango.Services.AuthAPI.Service
 {
@@ -12,11 +15,15 @@ namespace Mango.Services.AuthAPI.Service
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        public AuthService(AppDbContext db, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        private readonly IJwtTokenGenerator _jwtTokenGenerator;
+
+        public AuthService(AppDbContext db, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IJwtTokenGenerator jwtTokenGenerator)
         {
             _db = db;
             _userManager = userManager;
             _roleManager = roleManager;
+
+            _jwtTokenGenerator = jwtTokenGenerator;
         }
 
         public async Task<string> Register(RegistrationRequestDTO registrationRequestDTO)
@@ -75,6 +82,7 @@ namespace Mango.Services.AuthAPI.Service
             }
 
             //Generate JWT token
+            var token = _jwtTokenGenerator.GenerateToken(user);
 
             UserDTO userDTO = new()
             {
@@ -87,10 +95,35 @@ namespace Mango.Services.AuthAPI.Service
             LoginResponseDTO loginResponseDTO = new()
             {
                 User = userDTO,
-                Token = string.Empty
+                Token = token
             };
 
             return loginResponseDTO;
+        }
+
+        public async Task<bool> AssignRole(string email, string roleName)
+        {
+            var user = _db.ApplicationUsers.FirstOrDefault(x => x.Email.ToLower() == email.ToLower());
+
+            if (user == null) {
+                return false;
+            }
+
+            if (!_roleManager.RoleExistsAsync(roleName).GetAwaiter().GetResult())
+            {
+                //create role
+                _roleManager.CreateAsync(new IdentityRole(roleName)).GetAwaiter().GetResult();
+            }
+
+            await _userManager.AddToRoleAsync(user, roleName);
+            return true;
+        }
+
+        public bool EmailTaken(string email)
+        {
+            var user = _db.ApplicationUsers.FirstOrDefault(x => x.Email.ToLower() == email.ToLower());
+
+            return user != null;
         }
 
         public void Dispose()

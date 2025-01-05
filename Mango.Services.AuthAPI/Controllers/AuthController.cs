@@ -1,6 +1,7 @@
 ﻿using Mango.Services.AuthAPI.Models.DTO;
 using Mango.Services.AuthAPI.Service.IService;
 using Microsoft.AspNetCore.Mvc;
+using ZstdSharp.Unsafe;
 
 namespace Mango.Services.AuthAPI.Controllers
 {
@@ -45,7 +46,43 @@ namespace Mango.Services.AuthAPI.Controllers
             }
 
             _response.Result = loginResponse;
-            return Ok();
+            return Ok(_response);
+        }
+
+        [HttpPost("AssignRole")]
+        public async Task<IActionResult> AssignRole([FromBody] RegistrationRequestDTO model)
+        {
+            var assignRoleSuccessful = await _authService.AssignRole(model.Email, model.Role.ToUpper());
+
+            if (!assignRoleSuccessful)
+            {
+                _response.IsSuccess = false;
+                _response.Message = "Error encountered when assigning a user role";
+                return BadRequest(_response);
+            }
+
+            return Ok(_response);
+        }
+
+        [HttpPost("EmailTaken")]
+        public IActionResult EmailTaken([FromBody] string email)
+        {
+            try
+            {
+                var emailAlreadyTaken = _authService.EmailTaken(email);
+
+                _response.IsSuccess = true;
+                _response.Result = emailAlreadyTaken;
+
+                return Ok(_response);
+            }
+            catch(Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = $"The was an error retrieving the email: {ex.Message}";
+
+                return BadRequest(_response);
+            }
         }
     }
 }
