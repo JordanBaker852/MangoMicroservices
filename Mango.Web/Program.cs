@@ -2,6 +2,7 @@ using Mango.Web.Service;
 using Mango.Web.Service.IService;
 using Mango.Web.Utility;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,11 +23,23 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITokenProvider, TokenProvider>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
+    .AddCookie(option =>
     {
-        options.ExpireTimeSpan = TimeSpan.FromHours(10);
-        options.LoginPath = "/Auth/Login";
-        options.AccessDeniedPath = "/Auth/AccessDenied";
+        option.ExpireTimeSpan = TimeSpan.FromHours(10);
+        option.ReturnUrlParameter = "";
+        option.Events = new CookieAuthenticationEvents()
+        {
+            OnRedirectToAccessDenied = (context) =>
+            {
+                context.HttpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                return Task.CompletedTask;
+            },
+            OnRedirectToLogin = (context) =>
+            {
+                context.HttpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                return Task.CompletedTask;
+            },
+        };
     });
 
 var app = builder.Build();

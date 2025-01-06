@@ -1,10 +1,13 @@
 ﻿using Mango.Web.Models.DTO;
 using Mango.Web.Service.IService;
+using Mango.Web.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace Mango.Web.Controllers
 {
+    [Authorize(Roles = StaticDetails.ROLE_ADMIN)]
     public class CouponController : Controller
     {
         private readonly ICouponService _couponService;
