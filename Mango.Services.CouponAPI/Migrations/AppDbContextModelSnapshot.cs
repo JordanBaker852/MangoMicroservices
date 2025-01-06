@@ -20,11 +20,11 @@ namespace Mango.Services.CouponAPI.Migrations
 
             modelBuilder.Entity("Mango.Services.CouponAPI.Models.Coupon", b =>
                 {
-                    b.Property<int>("CouponId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("CouponCode")
+                    b.Property<string>("Code")
                         .IsRequired()
                         .HasColumnType("longtext");
 
@@ -34,22 +34,22 @@ namespace Mango.Services.CouponAPI.Migrations
                     b.Property<int>("MinAmount")
                         .HasColumnType("int");
 
-                    b.HasKey("CouponId");
+                    b.HasKey("Id");
 
                     b.ToTable("Coupons");
 
                     b.HasData(
                         new
                         {
-                            CouponId = 1,
-                            CouponCode = "10OFF",
+                            Id = 1,
+                            Code = "10OFF",
                             DiscountAmount = 10.0,
                             MinAmount = 20
                         },
                         new
                         {
-                            CouponId = 2,
-                            CouponCode = "20OFF",
+                            Id = 2,
+                            Code = "20OFF",
                             DiscountAmount = 20.0,
                             MinAmount = 40
                         });

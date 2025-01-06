@@ -1,6 +1,7 @@
 using Mango.Web.Service;
 using Mango.Web.Service.IService;
 using Mango.Web.Utility;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Net;
 
@@ -31,14 +32,12 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         {
             OnRedirectToAccessDenied = (context) =>
             {
-                context.HttpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
-                return Task.CompletedTask;
+                return Invoke404Response(context);
             },
             OnRedirectToLogin = (context) =>
             {
-                context.HttpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
-                return Task.CompletedTask;
-            },
+                return Invoke404Response(context);
+            }
         };
     });
 
@@ -64,3 +63,9 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+Task Invoke404Response(RedirectContext<CookieAuthenticationOptions> context)
+{
+    context.HttpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
+    return context.Response.CompleteAsync();
+}

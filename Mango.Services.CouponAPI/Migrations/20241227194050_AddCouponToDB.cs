@@ -18,15 +18,15 @@ namespace Mango.Services.CouponAPI.Migrations
                 name: "Coupons",
                 columns: table => new
                 {
-                    CouponId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    CouponCode = table.Column<string>(type: "longtext", nullable: false),
+                    Code = table.Column<string>(type: "longtext", nullable: false),
                     DiscountAmount = table.Column<double>(type: "double", nullable: false),
                     MinAmount = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Coupons", x => x.CouponId);
+                    table.PrimaryKey("PK_Coupons", x => x.Id);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
         }

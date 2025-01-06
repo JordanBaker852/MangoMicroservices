@@ -7,7 +7,7 @@
 namespace Mango.Services.CouponAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class SeedCouponTables : Migration
+    public partial class updatedCouponModelPropertyNames : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
