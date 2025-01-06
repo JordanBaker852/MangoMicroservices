@@ -125,10 +125,16 @@ namespace Mango.Services.CouponAPI.Controllers
             try
             {
                 Coupon result = _db.Coupons.FirstOrDefault(coupon => coupon.Id == id);
+
+                if (result == null)
+                {
+                    _response.IsSuccess = false;
+                    _response.Message = $"Coupon ID: {id} not found";
+                    return _response;
+                }
+
                 _db.Coupons.Remove(result);
                 _db.SaveChanges();
-
-                _response.IsSuccess = result != null;
             }
             catch (Exception ex)
             {
