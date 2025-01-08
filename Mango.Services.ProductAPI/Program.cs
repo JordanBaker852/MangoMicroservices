@@ -49,7 +49,7 @@ builder.Services.AddSwaggerGen(option =>
 
 builder.AddAppAuthentication();
 
-builder.Services.AddAuthentication();
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 

@@ -2,7 +2,8 @@
 using Mango.Services.ProductAPI.Data;
 using Mango.Services.ProductAPI.Models;
 using Mango.Services.ProductAPI.Models.DTO;
-using Microsoft.AspNetCore.Http;
+using Mango.Services.ProductAPI.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Mango.Services.ProductAPI.Controllers
@@ -41,7 +42,7 @@ namespace Mango.Services.ProductAPI.Controllers
 
         [HttpGet]
         [Route("{id:int}")]
-        public ResponseDTO GetById(int id)
+        public ResponseDTO Get(int id)
         {
             try
             {
@@ -68,6 +69,7 @@ namespace Mango.Services.ProductAPI.Controllers
 
         [HttpDelete]
         [Route("{id:int}")]
+        [Authorize(Roles = StaticDetails.ROLE_ADMIN)]
         public ResponseDTO Delete(int id)
         {
             try
@@ -83,6 +85,56 @@ namespace Mango.Services.ProductAPI.Controllers
                 }
 
                 _db.Products.Remove(product);
+                _db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message;
+            }
+
+            return _response;
+        }
+
+        [HttpPost]
+        [Authorize(Roles = StaticDetails.ROLE_ADMIN)]
+        public ResponseDTO Post([FromBody] ProductDTO productDTO)
+        {
+            try
+            {
+                Product result = _mapper.Map<Product>(productDTO);
+
+                _db.Products.Add(result);
+                _db.SaveChanges();
+
+                _response.Result = _mapper.Map<ProductDTO>(result);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message;
+            }
+
+            return _response;
+        }
+
+        [HttpPut]
+        [Authorize(Roles = StaticDetails.ROLE_ADMIN)]
+        public ResponseDTO Put([FromBody] ProductDTO productDTO)
+        {
+            try
+            {
+                Product product = _db.Products.FirstOrDefault(product => product.Id == productDTO.Id);
+
+                if (product == null)
+                {
+                    _response.IsSuccess = false;
+                    _response.Message = $"Product not found";
+
+                    return _response;
+                };
+
+                _db.Products.Update(product);
                 _db.SaveChanges();
 
                 _response.Result = _mapper.Map<ProductDTO>(product);
