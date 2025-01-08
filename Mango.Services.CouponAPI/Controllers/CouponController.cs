@@ -79,11 +79,11 @@ namespace Mango.Services.CouponAPI.Controllers
         }
 
         [HttpPost]
-        public ResponseDTO Post([FromBody] CouponDTO couponDto)
+        public ResponseDTO Post([FromBody] CouponDTO couponDTO)
         {
             try
             {
-                Coupon result = _mapper.Map<Coupon>(couponDto);
+                Coupon result = _mapper.Map<Coupon>(couponDTO);
                 _db.Coupons.Add(result);
                 _db.SaveChanges();
 
@@ -99,15 +99,24 @@ namespace Mango.Services.CouponAPI.Controllers
         }
 
         [HttpPut]
-        public ResponseDTO Put([FromBody] CouponDTO couponDto)
+        public ResponseDTO Put([FromBody] CouponDTO couponDTO)
         {
             try
             {
-                Coupon result = _mapper.Map<Coupon>(couponDto);
-                _db.Coupons.Update(result);
-                _db.SaveChanges();
+                Coupon result = _db.Coupons.FirstOrDefault(coupon => coupon.Id == couponDTO.Id);
 
-                _response.Result = _mapper.Map<CouponDTO>(result);
+                if (result == null)
+                {
+                    _response.IsSuccess = false;
+                    _response.Message = "Coupon not found";
+                }
+                else
+                {
+                    _db.Coupons.Update(result);
+                    _db.SaveChanges();
+
+                    _response.Result = _mapper.Map<CouponDTO>(result);
+                }
             }
             catch (Exception ex)
             {
@@ -130,11 +139,12 @@ namespace Mango.Services.CouponAPI.Controllers
                 {
                     _response.IsSuccess = false;
                     _response.Message = $"Coupon ID: {id} not found";
-                    return _response;
                 }
-
-                _db.Coupons.Remove(result);
-                _db.SaveChanges();
+                else
+                {
+                    _db.Coupons.Remove(result);
+                    _db.SaveChanges();
+                }
             }
             catch (Exception ex)
             {
