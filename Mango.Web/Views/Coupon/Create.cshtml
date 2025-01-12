@@ -3,11 +3,9 @@
 @model CouponDTO
 
 <form asp-action="Create">
-    <br />
     <div class="container border p-3">
         <h1 class="text-white text-center">Create Coupon</h1>
 
-        <hr />
         <div class="row">
             <div class="col-2">
                 <label class="control-label pt-2" style="font-size:20px;">Coupon Code</label>
@@ -32,17 +30,11 @@
             </div>
 
             <div class="col-5 offset-2">
-
                 <a asp-action="Index" class="btn-primary btn form-control ">Back to List</a>
             </div>
             <div class="col-5">
                 <input type="submit" value="Create" class="btn btn-success form-control" />
-
             </div>
-
-        </div>
-
-        <div>
         </div>
     </div>
 </form>

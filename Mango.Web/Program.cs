@@ -22,6 +22,7 @@ StaticDetails.ProductAPIBase = builder.Configuration.GetSection("ServiceUrls:Pro
 builder.Services.AddScoped<IBaseService, BaseService>();
 builder.Services.AddScoped<ICouponService, CouponService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ITokenProvider, TokenProvider>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

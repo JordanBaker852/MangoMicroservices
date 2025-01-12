@@ -1,12 +1,12 @@
 ﻿@using Mango.Web.Models.DTO
 
-@model IEnumerable<CouponDTO>
+@model IEnumerable<ProductDTO>
 
 <div class="card shadow border-0 mt-4">
 	<div class="card-header bg-secondary bg-gradient ml-0 py-3">
 		<div class="row">
 			<div class="col-12 text-center">
-				<h1 class="text-white">Coupons List</h1>
+				<h1 class="text-white">Products List</h1>
 			</div>
 		</div>
 	</div>
@@ -15,7 +15,7 @@
 			<div class="col-6">
 			</div>
 			<div class="col-6 text-end">
-				<a class="btn btn-outline-primary" asp-controller="Coupon" asp-action="Create"><i class="bi bi-plus-square"></i> Create New Coupon</a>
+				<a class="btn btn-outline-primary" asp-controller="Product" asp-action="Create"><i class="bi bi-plus-square"></i> Add a new product</a>
 
 			</div>
 		</div>
@@ -23,14 +23,21 @@
 			<thead>
 				<tr>
 					<th>
-						Coupon Code
+						Name
 					</th>
 					<th>
-						Discount Amount
+						Description
 					</th>
 					<th>
-						Minimum Amount
+						Price
 					</th>
+					<th>
+						Category
+					</th>
+					<th>
+						Image
+					</th>
+					<th></th>
 					<th></th>
 				</tr>
 			</thead>
@@ -39,16 +46,27 @@
 				{
 					<tr>
 						<td>
-							@item.Code
+							@item.Name
 						</td>
 						<td>
-							@item.DiscountAmount.ToString("c")
+							@item.Description
 						</td>
 						<td>
-							@item.MinAmount.ToString("c")
+							@item.Price.ToString("c")
 						</td>
 						<td>
-							<a asp-action="Delete" asp-route-couponId="@item.Id" class="btn btn-danger">
+							@item.CategoryName
+						</td>
+						<td>
+							@item.ImageUrl
+						</td>
+						<td>
+							<a asp-action="Edit" asp-route-productId="@item.Id" class="btn btn-danger">
+								<i class="bi bi-pencil"></i>
+							</a>
+						</td>
+						<td>
+							<a asp-action="Delete" asp-route-productId="@item.Id" class="btn btn-danger">
 								<i class="bi bi-trash"></i>
 							</a>
 						</td>

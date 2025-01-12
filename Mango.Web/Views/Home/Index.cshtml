@@ -1,8 +1,26 @@
-﻿@{
+﻿@using Mango.Web.Models.DTO
+
+@model List<ProductDTO>
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@if (Model.Count > 0)
+{
+    <div class="products-container">
+        <h1 class="display-4 text-center">All our products</h1>
+
+        <div class="products row justify-content-center row-gap-4"> 
+            @foreach(var product in Model)
+            {
+                <div class="product col-lg-3">
+                    <img class="product-image img-fluid" src="@product.ImageUrl" alt="@product.Name" />
+                    <p class="product-name">@product.Name</p>
+                    <p class="product-description">@Html.Raw(product.Description)</p>
+                    <span class="product-price">@product.Price.ToString("c")</span>
+                </div>
+            }
+        </div>
+    </div>
+}

@@ -31,7 +31,7 @@ namespace Mango.Web.Service
             });
         }
 
-        public async Task<ResponseDTO?> AddProductAsync(ProductDTO productDTO)
+        public async Task<ResponseDTO?> CreateProductAsync(ProductDTO productDTO)
         {
             return await _baseService.SendAsync(new RequestDTO
             {

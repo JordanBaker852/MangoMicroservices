@@ -10,6 +10,10 @@
         public const string ROLE_ADMIN = "ADMIN"; 
         public const string ROLE_CUSTOMER = "CUSTOMER";
 
+        public const string CATEGORY_APPETIZER = "Appetizer";
+        public const string CATEGORY_ENTREE = "Entree";
+        public const string CATEGORY_DESERT = "Desert";
+
         public const string TOKEN_COOKIE_NAME = "JwtToken";
         public const string JWT_ROLE_CLAIM_KEY = "role";
 
