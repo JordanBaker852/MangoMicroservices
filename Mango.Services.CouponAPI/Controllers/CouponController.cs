@@ -5,6 +5,7 @@ using Mango.Services.CouponAPI.Models.DTO;
 using Mango.Services.CouponAPI.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Mango.Services.CouponAPI.Controllers
 {
@@ -112,6 +113,10 @@ namespace Mango.Services.CouponAPI.Controllers
                 }
                 else
                 {
+                    //detach current coupon state to avoid tracking conflicts
+                    _db.Entry(result).State = EntityState.Detached;
+
+                    result = _mapper.Map<Coupon>(couponDTO);
                     _db.Coupons.Update(result);
                     _db.SaveChanges();
 
