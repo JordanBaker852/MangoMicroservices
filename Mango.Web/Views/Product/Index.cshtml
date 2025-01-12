@@ -15,8 +15,7 @@
 			<div class="col-6">
 			</div>
 			<div class="col-6 text-end">
-				<a class="btn btn-outline-primary" asp-controller="Product" asp-action="Create"><i class="bi bi-plus-square"></i> Add a new product</a>
-
+				<a class="btn btn-outline-primary" asp-controller="Product" asp-action="Create"><i class="bi bi-plus-square"></i> Create New Product</a>
 			</div>
 		</div>
 		<table class="table">
@@ -26,47 +25,32 @@
 						Name
 					</th>
 					<th>
-						Description
+						Category Name
 					</th>
 					<th>
 						Price
 					</th>
-					<th>
-						Category
-					</th>
-					<th>
-						Image
-					</th>
-					<th></th>
 					<th></th>
 				</tr>
 			</thead>
 			<tbody>
-				@foreach(var item in Model)
+				@foreach (var item in Model)
 				{
 					<tr>
 						<td>
 							@item.Name
 						</td>
 						<td>
-							@item.Description
+							@item.CategoryName
 						</td>
 						<td>
 							@item.Price.ToString("c")
 						</td>
 						<td>
-							@item.CategoryName
-						</td>
-						<td>
-							@item.ImageUrl
-						</td>
-						<td>
-							<a asp-action="Edit" asp-route-productId="@item.Id" class="btn btn-danger">
-								<i class="bi bi-pencil"></i>
+							<a class="btn btn-success" asp-action="Edit" asp-route-productId="@item.Id">
+								<i class="bi bi-pencil-square"></i>
 							</a>
-						</td>
-						<td>
-							<a asp-action="Delete" asp-route-productId="@item.Id" class="btn btn-danger">
+							<a class="btn btn-danger" asp-action="Delete" asp-route-productId="@item.Id">
 								<i class="bi bi-trash"></i>
 							</a>
 						</td>

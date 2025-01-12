@@ -1,6 +1,7 @@
 using Mango.Web.Models;
 using Mango.Web.Models.DTO;
 using Mango.Web.Service.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Diagnostics;
@@ -22,11 +23,47 @@ namespace Mango.Web.Controllers
         {
             try
             {
-                var result = await _productService.GetProductsAsync();
+                List<ProductDTO>? list = new();
 
-                List<ProductDTO> products = JsonConvert.DeserializeObject<List<ProductDTO>>(result.Result.ToString());
+                ResponseDTO? response = await _productService.GetProductsAsync();
 
-                return View(products);
+                if (response != null && response.IsSuccess)
+                {
+                    list = JsonConvert.DeserializeObject<List<ProductDTO>>(response.Result.ToString());
+                }
+                else
+                {
+                    TempData["error"] = response?.Message;
+                }
+
+                return View(list);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"An error has occured: {ex.Message}");
+                return Error();
+            }
+        }
+
+        [Authorize]
+        public async Task<IActionResult> ProductDetails(int productId)
+        {
+            try
+            {
+                ProductDTO? product = new();
+
+                ResponseDTO? response = await _productService.GetProductByIdAsync(productId);
+
+                if (response != null && response.IsSuccess)
+                {
+                    product = JsonConvert.DeserializeObject<ProductDTO>(response.Result.ToString());
+                }
+                else
+                {
+                    TempData["error"] = response?.Message;
+                }
+
+                return View(product);
             }
             catch (Exception ex)
             {
