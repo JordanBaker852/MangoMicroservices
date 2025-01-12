@@ -17,6 +17,7 @@ builder.Services.AddHttpClient<IAuthService, AuthService>();
 
 StaticDetails.CouponAPIBase = builder.Configuration.GetSection("ServiceUrls:CouponAPI").Get<string>();
 StaticDetails.AuthAPIBase = builder.Configuration.GetSection("ServiceUrls:AuthAPI").Get<string>();
+StaticDetails.ProductAPIBase = builder.Configuration.GetSection("ServiceUrls:ProductAPI").Get<string>();
 
 builder.Services.AddScoped<IBaseService, BaseService>();
 builder.Services.AddScoped<ICouponService, CouponService>();
