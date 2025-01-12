@@ -5,6 +5,7 @@ using Mango.Services.ProductAPI.Models.DTO;
 using Mango.Services.ProductAPI.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Mango.Services.ProductAPI.Controllers
 {
@@ -80,12 +81,12 @@ namespace Mango.Services.ProductAPI.Controllers
                 {
                     _response.IsSuccess = false;
                     _response.Message = $"Product ID: {id} not found";
-
-                    return _response;
                 }
-
-                _db.Products.Remove(product);
-                _db.SaveChanges();
+                else
+                {
+                    _db.Products.Remove(product);
+                    _db.SaveChanges();
+                }
             }
             catch (Exception ex)
             {
@@ -130,14 +131,18 @@ namespace Mango.Services.ProductAPI.Controllers
                 {
                     _response.IsSuccess = false;
                     _response.Message = $"Product not found";
+                }
+                else
+                {
+                    //detach current product state to avoid tracking conflicts
+                    _db.Entry(product).State = EntityState.Detached;
 
-                    return _response;
-                };
+                    product = _mapper.Map<Product>(productDTO);
+                    _db.Products.Update(product);
+                    _db.SaveChanges();
 
-                _db.Products.Update(product);
-                _db.SaveChanges();
-
-                _response.Result = _mapper.Map<ProductDTO>(product);
+                    _response.Result = _mapper.Map<ProductDTO>(product);
+                }
             }
             catch (Exception ex)
             {
