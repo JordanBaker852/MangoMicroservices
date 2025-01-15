@@ -20,7 +20,9 @@ IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
 builder.Services.AddSingleton(mapper);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ICouponService, CouponService>();
 builder.Services.AddHttpClient("Product", client => client.BaseAddress = new Uri(builder.Configuration.GetSection("ServiceUrls:ProductAPI").Get<string>()));
+builder.Services.AddHttpClient("Coupon", client => client.BaseAddress = new Uri(builder.Configuration.GetSection("ServiceUrls:CouponAPI").Get<string>()));
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
