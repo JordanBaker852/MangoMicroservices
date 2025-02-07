@@ -23,6 +23,11 @@ namespace Mango.Web.Controllers
             return View(cartDTO);
         }
 
+        //public async Task<IActionResult> Remove(int cartDetailsId)
+        //{
+
+        //}
+
         private async Task<CartDTO> LoadCartDTOForUser()
         {
             var userId = User.Claims.Where(claim => claim.Type == JwtRegisteredClaimNames.Sub)?.FirstOrDefault()?.Value;
@@ -39,7 +44,7 @@ namespace Mango.Web.Controllers
                 return null;
             }
 
-            return JsonConvert.DeserializeObject<CartDTO>(response.Result.ToString());
+            return JsonConvert.DeserializeObject<CartDTO>(response.Result?.ToString());
         }
     }
 }
