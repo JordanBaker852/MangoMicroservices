@@ -1,3 +1,4 @@
+using IdentityModel;
 using Mango.Web.Models;
 using Mango.Web.Models.DTO;
 using Mango.Web.Service.IService;
@@ -12,11 +13,13 @@ namespace Mango.Web.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IProductService _productService;
+        private readonly IShoppingCartService _shoppingCartService;
 
-        public HomeController(ILogger<HomeController> logger, IProductService productService)
+        public HomeController(ILogger<HomeController> logger, IProductService productService, IShoppingCartService shoppingCartService)
         {
             _logger = logger;
             _productService = productService;
+            _shoppingCartService = shoppingCartService;
         }
 
         public async Task<IActionResult> Index()
@@ -64,6 +67,53 @@ namespace Mango.Web.Controllers
                 }
 
                 return View(product);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"An error has occured: {ex.Message}");
+                return Error();
+            }
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> ProductDetails(ProductDTO productDto)
+        {
+            try
+            {
+                var cartDTO = new CartDTO()
+                {
+                    CartHeader = new CartHeaderDTO()
+                    {
+                        UserId = User.Claims.Where(user => user.Type == JwtClaimTypes.Subject)?.FirstOrDefault()?.Value
+                    }
+                };
+
+                var cartDetailsDTO = new CartDetailsDTO()
+                {
+                    Quantity = productDto.Quantity,
+                    ProductId = productDto.Id
+                };
+
+                var cartDetailsDTOs = new List<CartDetailsDTO>() 
+                {
+                    cartDetailsDTO
+                };
+
+                cartDTO.CartDetails = cartDetailsDTOs;
+
+                ResponseDTO? response = await _shoppingCartService.UpsertCartAsync(cartDTO);
+
+                if (response != null && response.IsSuccess)
+                {
+                    TempData["success"] = "Item added to cart successfully";
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    TempData["error"] = response?.Message;
+                    return RedirectToAction(nameof(ProductDetails), productDto.Id);
+                }
             }
             catch (Exception ex)
             {

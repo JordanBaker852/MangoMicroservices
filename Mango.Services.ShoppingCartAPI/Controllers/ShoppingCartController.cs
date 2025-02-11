@@ -5,7 +5,6 @@ using Mango.Services.ShoppingCartAPI.Models.DTO;
 using Mango.Services.ShoppingCartAPI.Service.IService;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.PortableExecutable;
 
 namespace Mango.Services.ShoppingCartAPI.Controllers
 {
@@ -29,13 +28,13 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
         }
 
         [HttpGet("GetCart/{userId}")]
-        public async Task<ResponseDTO> GetCart(string userId)
+        public async Task<ResponseDTO> GetCart(Guid userId)
         {
             try
             {
                 CartDTO cart = new()
                 {
-                    CartHeader = _mapper.Map<CartHeaderDTO>(_db.CartHeaders.First(header => header.UserId == userId))
+                    CartHeader = _mapper.Map<CartHeaderDTO>(_db.CartHeaders.First(header => header.UserId == userId.ToString()))
                 };
 
                 cart.CartDetails = _mapper.Map<IEnumerable<CartDetailsDTO>>(_db.CartDetails
