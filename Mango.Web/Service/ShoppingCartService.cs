@@ -42,12 +42,12 @@ namespace Mango.Web.Service
             });
         }
 
-        public async Task<ResponseDTO?> ApplyCouponAsync(CouponDTO couponDto)
+        public async Task<ResponseDTO?> ApplyCouponAsync(CartDTO cartDTO)
         {
             return await _baseService.SendAsync(new RequestDTO()
             {
                 HttpRequest = StaticDetails.HttpRequestType.POST,
-                Data = couponDto,
+                Data = cartDTO,
                 Url = $"{StaticDetails.ShoppingCartAPIBase}/api/shoppingcart/ApplyCoupon"
             });
         }
