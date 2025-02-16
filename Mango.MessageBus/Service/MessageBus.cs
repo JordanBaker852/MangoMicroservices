@@ -37,7 +37,7 @@ namespace Mango.MessageBus.Service
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            GC.SuppressFinalize(this);
         }
     }
 }
